@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const app = express();
 const { v4: uuidv4 } = require('uuid');
-const port = 4000;
+const PORT = 4000;
 
 app.use(express.json());
 
@@ -41,25 +41,30 @@ function saveData(filename = 'dataStore.json') {
 }
 
 // Получение данных
-app.get('/data', (req, res) => {
+app.get('/db-collection', (req, res) => {
    res.json(dataStore);
 });
 
-app.post('/data', (req, res) => {
-   const newData = req.body;
+app.get('/logs', (req, res) => {
+   res.json(dataStore);
+});
+
+// Маршрут для добавления нового продукта
+app.post('/db', (req, res) => {
+   const newData = req.body.data;
    const id = uuidv4();
-   const test = {
+   const newEntry = {
       [id]: newData,
    };
-   dataStore.unshift(test);
+   dataStore.unshift(newEntry);
    saveData();
-   // res.status(201).json({ id, ...newData });
    res.json(dataStore);
 });
 
-app.put('/data/:id', (req, res) => {
+// Маршрут для обновления продукта по ID
+app.post('/db/:id', (req, res) => {
    const id = req.params.id;
-   const updatedData = req.body;
+   const updatedData = req.body.data;
 
    let found = false;
    for (let i = 0; i < dataStore.length; i++) {
@@ -78,7 +83,8 @@ app.put('/data/:id', (req, res) => {
    }
 });
 
-app.delete('/data/:id', (req, res) => {
+// Маршрут для удаления продукта по ID
+app.delete('/db/:id', (req, res) => {
    const id = req.params.id;
 
    const initialLength = dataStore.length;
@@ -92,6 +98,11 @@ app.delete('/data/:id', (req, res) => {
    }
 });
 
-app.listen(port, () => {
-   console.log(`Server is running on http://localhost:${port}`);
+// Загрузка данных при запуске сервера
+if (fs.existsSync('data.json')) {
+   dataStore = JSON.parse(fs.readFileSync('data.json', 'utf8'));
+}
+
+app.listen(PORT, () => {
+   console.log(`Server is running on port ${PORT}`);
 });
