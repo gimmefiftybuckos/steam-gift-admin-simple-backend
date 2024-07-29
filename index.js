@@ -1,7 +1,6 @@
 const express = require('express');
 const fs = require('fs');
 const app = express();
-const { v4: uuidv4 } = require('uuid');
 const PORT = 4000;
 
 app.use(express.json());
@@ -19,7 +18,6 @@ app.use((req, res, next) => {
    next();
 });
 
-// Чтение данных из файла при запуске сервера
 let dataStore = [];
 fs.readFile('dataStore.json', 'utf8', (err, data) => {
    if (err) {
@@ -30,7 +28,7 @@ fs.readFile('dataStore.json', 'utf8', (err, data) => {
 });
 
 function saveData(filename = 'dataStore.json') {
-   const jsonString = JSON.stringify(dataStore);
+   const jsonString = JSON.stringify(dataStore, null, 2);
    fs.writeFile(filename, jsonString, (err) => {
       if (err) {
          console.error('Ошибка записи', err);
@@ -40,65 +38,78 @@ function saveData(filename = 'dataStore.json') {
    });
 }
 
-// Получение данных
+app.get('/logs', (req, res) => {
+   const interval = req.query.interval;
+   let filePath = 'logsStore.json';
+
+   if (interval === '60') {
+      filePath = 'logsStore60.json';
+   }
+
+   fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) {
+         console.error(err);
+         res.status(500).json({ error: 'Failed to read logs file' });
+      } else {
+         const logsStore = JSON.parse(data);
+         res.json(logsStore);
+      }
+   });
+});
+
 app.get('/db-collection', (req, res) => {
    res.json(dataStore);
 });
 
-app.get('/logs', (req, res) => {
-   res.json(dataStore);
-});
-
-// Маршрут для добавления нового продукта
-app.post('/db', (req, res) => {
-   const newData = req.body.data;
-   const id = uuidv4();
-   const newEntry = {
-      [id]: newData,
-   };
-   dataStore.unshift(newEntry);
-   saveData();
-   res.json(dataStore);
-});
-
-// Маршрут для обновления продукта по ID
 app.post('/db/:id', (req, res) => {
    const id = req.params.id;
+   const [title, receiverRegion] = id.split('_');
    const updatedData = req.body.data;
 
-   let found = false;
-   for (let i = 0; i < dataStore.length; i++) {
-      if (dataStore[i][id]) {
-         dataStore[i][id] = { ...dataStore[i][id], ...updatedData };
-         found = true;
-         break;
-      }
+   console.log(title);
+
+   if (!updatedData || !updatedData.title || !updatedData.receiverRegion) {
+      return res.status(400).json({ error: 'Invalid data' });
    }
 
-   if (found) {
+   const existingIndex = dataStore.findIndex(
+      (item) => item.title === title && item.receiverRegion === receiverRegion
+   );
+
+   if (existingIndex !== -1) {
+      dataStore[existingIndex] = updatedData;
       saveData();
-      res.json(dataStore);
+      res.json({ message: 'Data updated' });
    } else {
       res.status(404).json({ error: 'Data not found' });
    }
 });
 
-// Маршрут для удаления продукта по ID
 app.delete('/db/:id', (req, res) => {
    const id = req.params.id;
+   const [title, receiverRegion] = id.split('_');
 
    const initialLength = dataStore.length;
-   dataStore = dataStore.filter((item) => !item[id]);
+   dataStore = dataStore.filter(
+      (item) =>
+         !(item.title === title && item.receiverRegion === receiverRegion)
+   );
 
    if (dataStore.length < initialLength) {
       saveData();
-      res.json(dataStore);
+      res.json({ message: 'Data successfully deleted' });
    } else {
       res.status(404).json({ error: 'Data not found' });
    }
 });
 
-// Загрузка данных при запуске сервера
+app.post('/db', (req, res) => {
+   const newData = req.body.data;
+   dataStore.unshift(newData);
+   saveData();
+   res.json({ message: 'Data successfully added' });
+});
+
 if (fs.existsSync('data.json')) {
    dataStore = JSON.parse(fs.readFileSync('data.json', 'utf8'));
 }

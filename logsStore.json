@@ -1,7 +1,74 @@
 [
-    "2024-07-25 14:35:00 - Transaction ID: 123456789 - Sold game \"Cyber Adventure\" for $59.99 - Buyer: John Doe - Payment Method: Credit Card - Platform: PC - Region: US",
-    "2024-07-25 15:45:00 - Transaction ID: 987654321 - Sold game \"Mystic Quest\" for $49.99 - Buyer: Jane Smith - Payment Method: PayPal - Platform: Xbox - Region: EU",
-    "2024-07-26 10:20:00 - Transaction ID: 192837465 - Sold game \"Space Odyssey\" for $39.99 - Buyer: Alice Johnson - Payment Method: Debit Card - Platform: PlayStation - Region: JP",
-    "2024-07-26 11:55:00 - Transaction ID: 564738291 - Sold game \"Fantasy World\" for $29.99 - Buyer: Bob Brown - Payment Method: Credit Card - Platform: Switch - Region: AU",
-    "2024-07-27 09:30:00 - Transaction ID: 102938475 - Sold game \"Adventure Island\" for $19.99 - Buyer: Charlie Davis - Payment Method: PayPal - Platform: PC - Region: US"
+    {
+      "logs": [
+       "2024-07-27 09:30:00",
+    "102938475",
+    "Adventure Island",
+    "$19.99",
+    "Charlie Davis",
+    "PayPal",
+    "PC",
+    "US"
+    ]
+    },
+    {
+      "logs": [
+        "2024-07-27 09:30:00",
+    "102938475",
+    "Adventure Island",
+    "$19.99",
+    "Charlie Davis",
+    "PayPal",
+    "PC",
+    "US"
+    ]
+    },
+    {
+      "logs": [
+        "2024-07-27 09:30:00",
+    "102938475",
+    "Adventure Island",
+    "$19.99",
+    "Charlie Davis",
+    "PayPal",
+    "PC",
+    "US"
+    ]
+    },
+    {
+      "logs": [
+      "2024-07-27 09:30:00",
+    "102938475",
+    "Adventure Island",
+    "$19.99",
+    "Charlie Davis",
+    "PayPal",
+    "PC",
+    "US"
+    ]
+    },
+    {
+      "logs": [
+       "2024-07-27 09:30:00",
+    "102938475",
+    "Adventure Island",
+    "$19.99",
+    "Charlie Davis",
+    "PayPal",
+    "PC",
+    "US"
+    ]
+    },
+    {
+      "logs": [
+       "2024-07-27 09:30:00",
+    "102938475",
+    "Adventure Island",
+    "$19.99",
+    "Charlie Davis",
+    "PayPal",
+    "PC",
+    "US"
+    ]
+    }
   ]
